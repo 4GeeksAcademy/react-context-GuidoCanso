@@ -10,7 +10,11 @@ const Form = () => {
 	const navigate = useNavigate();
 	const { dispatch } = useGlobalReducer();
 
-	const addContact = () => {
+	
+
+
+	const addContact = async () => {
+		// await ensureAgendaExists();
 		fetch('https://playground.4geeks.com/contact/agendas/Guido/contacts', {
 			method: 'POST',
 			headers: {
@@ -23,20 +27,20 @@ const Form = () => {
 				address: address
 			})
 		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error(`Error en la solicitud: ${response.status}`);
+			.then(res => {
+				if (!res.ok) {
+					throw new Error(`Error en la solicitud: ${res.status}`);
 				}
-				return response.json();
+				return res.json();
 			})
 			.then(data => {
 				console.log('Contacto creado:', data);
-				// Recargar lista de contactos
+
 				fetch("https://playground.4geeks.com/contact/agendas/Guido/contacts")
 					.then(res => res.json())
 					.then(data => {
 						dispatch({ type: "set_contacts", payload: data.contacts });
-						navigate("/"); // Redirige al home
+						navigate("/");
 					});
 			})
 			.catch(error => {
